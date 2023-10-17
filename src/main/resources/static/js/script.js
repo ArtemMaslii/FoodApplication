@@ -182,12 +182,13 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-   getResource('http://localhost:8080/menu')
+    axios.get('http://localhost:8080/menu')
         .then(data => {
-            data.menu.forEach(({img, altimg, title, description, price}) => {
+            data.data.menu.forEach(({img, altimg, title, description, price}) => {
                 new MenuCard(img, altimg, title, description, price, ".menu .container").render();
-            });
+            })
         });
+
 
     const forms = document.querySelectorAll('form');
     const message = {
