@@ -276,33 +276,71 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     const slides = document.querySelectorAll(".offer__slide"),
+        slider = document.querySelector(".offer__slider"),
         prev = document.querySelector(".offer__slider-prev"),
         next = document.querySelector(".offer__slider-next"),
         total = document.querySelector("#total"),
         current = document.querySelector("#current"),
         slidesWrapper = document.querySelector(".offer__slider-wrapper"),
         slidesField = document.querySelector(".offer__slider-inner"),
-        width = window.getComputedStyle(slidesWrapper).width;
+        width = window.getComputedStyle(slidesWrapper).width,
+        widthInPixels = +width.slice(0, width.length - 2);
+
     let slideIndex = 1;
     let offset = 0;
 
+    const indicators = document.createElement("ol"),
+        dots = [];
+
     function updateIndexOfCurrentSlide() {
-        current.textContent = slides.length < 10 ? `0${slideIndex}` : slideIndex;
+        current.textContent = slides.length < 10 ? `0${slideIndex}` :`${slideIndex}`;
     }
 
     function showTotalNumberOfSlides() {
-        total.textContent = slides.length < 10 ? `0${slides.length}` : slides.length;
+        total.textContent = slides.length < 10 ? `0${slides.length}` : `${slides.length}`;
     }
 
     function renderStyleOfSlides() {
         slidesField.style.width = 100 * slides.length + '%';
         slides.forEach(slide => {
-            slide.style.width = width;
+            slide.style.width = `${widthInPixels}`;
         });
     }
 
-    function addTransformToSlidesField(newOffset) {
-        slidesField.style.transform = `translateX(-${newOffset}px)`;
+    function initiateIndicators(classNam) {
+        indicators.classList.add(classNam);
+        slider.append(indicators);
+    }
+
+    function addDotsToHTML() {
+        for (let i = 0; i < slides.length; i++) {
+            const dot = document.createElement("li");
+            dot.setAttribute("data-slide-to", i + 1);
+            dot.classList.add("dot");
+            if (i === 0) {
+                dot.style.opacity = 1;
+            }
+            indicators.append(dot);
+            dots.push(dot);
+        }
+    }
+
+    initiateIndicators("carousel-indicators");
+    addDotsToHTML();
+
+    function changeOpacityOfDots() {
+        dots.forEach(dot => dot.style.opacity = ".5");
+        dots[slideIndex - 1].style.opacity = 1;
+    }
+
+    function addTransformToSlidesField(offset) {
+        slidesField.style.transform = `translateX(-${offset}px)`;
+    }
+
+    function moveSlides(offset) {
+        addTransformToSlidesField(offset);
+        updateIndexOfCurrentSlide();
+        changeOpacityOfDots();
     }
 
     showTotalNumberOfSlides();
@@ -310,13 +348,11 @@ window.addEventListener('DOMContentLoaded', function() {
     renderStyleOfSlides();
 
     next.addEventListener("click", () => {
-        if (offset === +width.slice(0, width.length - 2) * (slides.length - 1)) {
+        if (offset === widthInPixels * (slides.length - 1)) {
                  offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += widthInPixels;
         }
-
-        addTransformToSlidesField(offset);
 
         if (slideIndex === slides.length) {
             slideIndex = 1;
@@ -324,17 +360,15 @@ window.addEventListener('DOMContentLoaded', function() {
             slideIndex++;
         }
 
-        updateIndexOfCurrentSlide();
+        moveSlides(offset);
     });
 
     prev.addEventListener("click", () => {
         if (offset === 0) {
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1)
+            offset = widthInPixels * (slides.length - 1)
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= widthInPixels;
         }
-
-        addTransformToSlidesField(offset);
 
         if (slideIndex === 1) {
             slideIndex = slides.length;
@@ -342,6 +376,19 @@ window.addEventListener('DOMContentLoaded', function() {
             slideIndex--;
         }
 
-        updateIndexOfCurrentSlide();
+        moveSlides(offset);
     });
+
+    dots.forEach(dot => {
+       dot.addEventListener("click", (e) => {
+          const slideTo = +e.target.getAttribute("data-slide-to");
+
+          slideIndex = slideTo;
+          offset = widthInPixels * (slideTo - 1);
+
+           moveSlides(offset);
+       });
+    });
+
+
 });
