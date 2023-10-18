@@ -283,7 +283,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
     showSlides(slideIndex);
 
-
     function showSlides(n) {
         console.log(slides);
         if (n > slides.length) {
