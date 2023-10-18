@@ -182,7 +182,7 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    axios.get('http://localhost:8080/menu')
+    axios.get('http://localhost:8081/menu')
         .then(data => {
             data.data.menu.forEach(({img, altimg, title, description, price}) => {
                 new MenuCard(img, altimg, title, description, price, ".menu .container").render();
@@ -239,7 +239,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            postData('http://localhost:8080/food/registration', json)
+            postData('http://localhost:8081/food/registration', json)
                 .then(data => {
                     console.log(data);
                     showThanksModal(message.success);
