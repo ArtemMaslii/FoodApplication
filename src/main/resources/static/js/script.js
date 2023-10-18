@@ -182,7 +182,7 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    axios.get('http://localhost:8081/menu')
+    axios.get('http://localhost:8080/menu')
         .then(data => {
             data.data.menu.forEach(({img, altimg, title, description, price}) => {
                 new MenuCard(img, altimg, title, description, price, ".menu .container").render();
@@ -239,7 +239,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            postData('http://localhost:8081/food/registration', json)
+            postData('http://localhost:8080/food/registration', json)
                 .then(data => {
                     console.log(data);
                     showThanksModal(message.success);
@@ -277,35 +277,71 @@ window.addEventListener('DOMContentLoaded', function() {
 
     const slides = document.querySelectorAll(".offer__slide"),
         prev = document.querySelector(".offer__slider-prev"),
-        next = document.querySelector(".offer__slider-next");
-
+        next = document.querySelector(".offer__slider-next"),
+        total = document.querySelector("#total"),
+        current = document.querySelector("#current"),
+        slidesWrapper = document.querySelector(".offer__slider-wrapper"),
+        slidesField = document.querySelector(".offer__slider-inner"),
+        width = window.getComputedStyle(slidesWrapper).width;
     let slideIndex = 1;
+    let offset = 0;
 
-    showSlides(slideIndex);
+    function updateIndexOfCurrentSlide() {
+        current.textContent = slides.length < 10 ? `0${slideIndex}` : slideIndex;
+    }
 
-    function showSlides(n) {
-        console.log(slides);
-        if (n > slides.length) {
+    function showTotalNumberOfSlides() {
+        total.textContent = slides.length < 10 ? `0${slides.length}` : slides.length;
+    }
+
+    function renderStyleOfSlides() {
+        slidesField.style.width = 100 * slides.length + '%';
+        slides.forEach(slide => {
+            slide.style.width = width;
+        });
+    }
+
+    function addTransformToSlidesField(newOffset) {
+        slidesField.style.transform = `translateX(-${newOffset}px)`;
+    }
+
+    showTotalNumberOfSlides();
+    updateIndexOfCurrentSlide();
+    renderStyleOfSlides();
+
+    next.addEventListener("click", () => {
+        if (offset === +width.slice(0, width.length - 2) * (slides.length - 1)) {
+                 offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);
+        }
+
+        addTransformToSlidesField(offset);
+
+        if (slideIndex === slides.length) {
             slideIndex = 1;
+        } else {
+            slideIndex++;
         }
-        if (n < 1) {
-            slideIndex = slides.length;
-        }
 
-        slides.forEach((item) => item.style.display = "none");
-
-        slides[slideIndex - 1].style.display = "block";
-    }
-
-    function plusSlides (n) {
-        showSlides(slideIndex += n);
-    }
-
-    prev.addEventListener('click', function(){
-        plusSlides(-1);
+        updateIndexOfCurrentSlide();
     });
 
-    next.addEventListener('click', function(){
-        plusSlides(1);
+    prev.addEventListener("click", () => {
+        if (offset === 0) {
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1)
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+        }
+
+        addTransformToSlidesField(offset);
+
+        if (slideIndex === 1) {
+            slideIndex = slides.length;
+        } else {
+            slideIndex--;
+        }
+
+        updateIndexOfCurrentSlide();
     });
 });
