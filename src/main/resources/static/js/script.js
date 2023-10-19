@@ -284,7 +284,7 @@ window.addEventListener('DOMContentLoaded', function() {
         slidesWrapper = document.querySelector(".offer__slider-wrapper"),
         slidesField = document.querySelector(".offer__slider-inner"),
         width = window.getComputedStyle(slidesWrapper).width,
-        widthInPixels = +width.slice(0, width.length - 2);
+        widthInPixels = +width.replace(/\D/g, "");
 
     let slideIndex = 1;
     let offset = 0;
