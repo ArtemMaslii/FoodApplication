@@ -718,3 +718,7 @@ a{
     opacity: .5;
     transition: opacity .6s ease;
 }
+
+.error_input {
+    border: 1px solid red
+}
