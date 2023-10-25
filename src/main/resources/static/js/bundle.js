@@ -207,8 +207,8 @@ function forms(formSelector, modalTimerId) {
 
     const message = {
         loading: 'img/form/spinner.svg',
-        success: 'Спасибо! Скоро мы с вами свяжемся',
-        failure: 'Что-то пошло не так...'
+        success: "Thanks! We'll contact you soon!",
+        failure: 'Something went wrong...'
     };
 
     forms.forEach(item => {
@@ -325,7 +325,7 @@ function modals(triggerSelector, modalSelector, modalTimerId) {
     });
 
     function showModalByScroll() {
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
             openModal(modalSelector, modalTimerId);
             window.removeEventListener('scroll', showModalByScroll);
         }
