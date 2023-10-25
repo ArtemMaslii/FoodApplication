@@ -195,14 +195,10 @@ a{
     cursor:pointer;
     transition:.3s all
 }
-.tabheader__item {
-    font-weight: 700;
-    font-size: 18px;
-    font-weight: 300;
-    margin-top: 10px;
-    color: rgba(0, 0, 0, .6);
-    cursor: pointer;
-    transition: .3s all;
+.tabheader__item_active{
+    color:#000;
+    font-size:22px;
+    font-weight:700
 }
 
 .offer {

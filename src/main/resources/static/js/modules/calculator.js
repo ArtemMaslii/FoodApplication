@@ -1,5 +1,5 @@
-function calculator() {
-    const result = document.querySelector('.calculating__result span');
+function calculator(resultSelector) {
+    const result = document.querySelector(resultSelector);
 
     let sex = localStorage.getItem("sex") || (localStorage.setItem("sex", "female"), "female"),
         height, weight, age,
@@ -105,4 +105,4 @@ function calculator() {
     getDynamicInformation("#age");
 }
 
-module.exports = calculator;
+export default calculator;
